@@ -41,14 +41,12 @@ returning true or false as appropriate.
 - <code>TypeError</code> If target is null or undefined.
 - <code>TypeError</code> If searchString is a RegExp.
 
-**Params**: <code>string</code> searchString - A string to be searched for within the
- target string.  
-**Params**: <code>number</code> [position] -The position within the string at which to begin
- searching for searchString.(defaults to 0).  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | string | <code>string</code> | The target string. |
+| searchString | <code>string</code> | A string to be searched for within the  target string. |
+| [position] | <code>number</code> | The position within the string at which to begin  searching for searchString.(defaults to 0). |
 
 **Example**  
 ```js

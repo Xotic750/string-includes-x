@@ -55,12 +55,12 @@ if (Boolean($includes) === false) {
  * This method determines whether one string may be found within another string,
  * returning true or false as appropriate.
  *
- * @param {string} string The target string.
+ * @param {string} string - The target string.
  * @throws {TypeError} If target is null or undefined.
- * @params {string} searchString - A string to be searched for within the
+ * @param {string} searchString - A string to be searched for within the
  *  target string.
  * @throws {TypeError} If searchString is a RegExp.
- * @params {number} [position] -The position within the string at which to begin
+ * @param {number} [position] -The position within the string at which to begin
  *  searching for searchString.(defaults to 0).
  * @return {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
