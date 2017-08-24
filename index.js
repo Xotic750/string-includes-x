@@ -60,6 +60,8 @@ if (Boolean($includes) === false) {
  * @params {string} searchString - A string to be searched for within the
  *  target string.
  * @throws {TypeError} If searchString is a RegExp.
+ * @params {number} [position] -The position within the string at which to begin
+ *  searching for searchString.(defaults to 0).
  * @return {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
  * @example

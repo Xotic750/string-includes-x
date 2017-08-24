@@ -43,6 +43,8 @@ returning true or false as appropriate.
 
 **Params**: <code>string</code> searchString - A string to be searched for within the
  target string.  
+**Params**: <code>number</code> [position] -The position within the string at which to begin
+ searching for searchString.(defaults to 0).  
 
 | Param | Type | Description |
 | --- | --- | --- |
