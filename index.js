@@ -1,6 +1,6 @@
 /**
  * @file Determines whether one string may be found within another string.
- * @version 1.0.0
+ * @version 1.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -9,28 +9,43 @@
 
 'use strict';
 
-var nativeIncludes = String.prototype.includes;
+var nativeIncludes = typeof String.prototype.includes === 'function' && String.prototype.includes;
 
-var $includes;
+var isWorking;
 if (nativeIncludes) {
-  try {
-    if (nativeIncludes.call('a', 'a', Infinity) !== false) {
-      throw new Error('failed');
-    }
+  var attempt = require('attempt-x');
+  var res = attempt.call('/a/', nativeIncludes, /a/);
+  isWorking = res.threw;
 
-    $includes = function includes(string, searchString) {
-      var args = [searchString];
-      if (arguments.length > 2) {
-        args[1] = arguments[2];
-      }
+  if (isWorking) {
+    res = attempt.call('abc', nativeIncludes, 'a', Infinity);
+    isWorking = res.threw === false && res.value === false;
+  }
 
-      return nativeIncludes.apply(string, args);
-    };
-  } catch (ignore) {}
+  if (isWorking) {
+    res = attempt.call(123, nativeIncludes, '2');
+    isWorking = res.threw === false && res.value === true;
+  }
+
+  if (isWorking) {
+    // eslint-disable-next-line no-useless-call
+    res = attempt.call(null, nativeIncludes, 'u');
+    isWorking = res.threw;
+  }
 }
 
-if (Boolean($includes) === false) {
-  var isRegExp = require('is-regex');
+var $includes;
+if (isWorking) {
+  $includes = function includes(string, searchString) {
+    var args = [searchString];
+    if (arguments.length > 2) {
+      args[1] = arguments[2];
+    }
+
+    return nativeIncludes.apply(string, args);
+  };
+} else {
+  var isRegExp = require('is-regexp-x');
   var toStr = require('to-string-x');
   var requireObjectCoercible = require('require-object-coercible-x');
   var indexOf = String.prototype.indexOf;
