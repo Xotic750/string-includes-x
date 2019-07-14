@@ -1,17 +1,19 @@
-'use strict';
+let includes;
 
-var includes;
 if (typeof module === 'object' && module.exports) {
   require('es5-shim');
   require('es5-shim/es5-sham');
+
   if (typeof JSON === 'undefined') {
     JSON = {};
   }
+
   require('json3').runInContext(null, JSON);
   require('es6-shim');
-  var es7 = require('es7-shim');
-  Object.keys(es7).forEach(function (key) {
-    var obj = es7[key];
+  const es7 = require('es7-shim');
+  Object.keys(es7).forEach(function(key) {
+    const obj = es7[key];
+
     if (typeof obj.shim === 'function') {
       obj.shim();
     }
@@ -21,32 +23,32 @@ if (typeof module === 'object' && module.exports) {
   includes = returnExports;
 }
 
-describe('includes', function () {
-  it('is a function', function () {
+describe('includes', function() {
+  it('is a function', function() {
     expect(typeof includes).toBe('function');
   });
 
-  it('should throw when target is null or undefined', function () {
-    expect(function () {
+  it('should throw when target is null or undefined', function() {
+    expect(function() {
       includes();
     }).toThrow();
 
-    expect(function () {
+    expect(function() {
       includes(void 0);
     }).toThrow();
 
-    expect(function () {
+    expect(function() {
       includes(null);
     }).toThrow();
   });
 
-  it('throws a TypeError when given a regex', function () {
-    expect(function () {
+  it('throws a TypeError when given a regex', function() {
+    expect(function() {
       includes('foo', /a/g);
     }).toThrow();
   });
 
-  it('should be truthy on correct results', function () {
+  it('should be truthy on correct results', function() {
     expect(includes('test', 'es')).toBe(true);
     expect(includes('abc', 'a')).toBe(true);
     expect(includes('abc', 'b')).toBe(true);
@@ -69,19 +71,19 @@ describe('includes', function () {
     expect(includes('abc', 'cd', NaN)).toBe(false);
   });
 
-  it('should handle large positions', function () {
+  it('should handle large positions', function() {
     expect(includes('abc', 'a', 42)).toBe(false);
     expect(includes('abc', 'a', Infinity)).toBe(false);
   });
 
-  it('should handle negative positions', function () {
+  it('should handle negative positions', function() {
     expect(includes('abc', 'ab', -43)).toBe(true);
     expect(includes('abc', 'cd', -42)).toBe(false);
     expect(includes('abc', 'ab', -Infinity)).toBe(true);
     expect(includes('abc', 'cd', -Infinity)).toBe(false);
   });
 
-  it('should be falsy on incorrect results', function () {
+  it('should be falsy on incorrect results', function() {
     expect(includes('test', '1290')).toBe(false);
   });
 });

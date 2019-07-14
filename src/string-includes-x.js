@@ -7,14 +7,13 @@
  * @module string-includes-x
  */
 
-'use strict';
+const nativeIncludes = typeof String.prototype.includes === 'function' && String.prototype.includes;
 
-var nativeIncludes = typeof String.prototype.includes === 'function' && String.prototype.includes;
+let isWorking;
 
-var isWorking;
 if (nativeIncludes) {
-  var attempt = require('attempt-x');
-  var res = attempt.call('/a/', nativeIncludes, /a/);
+  const attempt = require('attempt-x');
+  let res = attempt.call('/a/', nativeIncludes, /a/);
   isWorking = res.threw;
 
   if (isWorking) {
@@ -34,10 +33,12 @@ if (nativeIncludes) {
   }
 }
 
-var $includes;
+let $includes;
+
 if (isWorking) {
   $includes = function includes(string, searchString) {
-    var args = [searchString];
+    const args = [searchString];
+
     if (arguments.length > 2) {
       args[1] = arguments[2];
     }
@@ -45,18 +46,20 @@ if (isWorking) {
     return nativeIncludes.apply(string, args);
   };
 } else {
-  var isRegExp = require('is-regexp-x');
-  var toStr = require('to-string-x');
-  var requireObjectCoercible = require('require-object-coercible-x');
-  var indexOf = String.prototype.indexOf;
+  const isRegExp = require('is-regexp-x');
+  const toStr = require('to-string-x');
+  const requireObjectCoercible = require('require-object-coercible-x');
+  const {indexOf} = String.prototype;
 
   $includes = function includes(string, searchString) {
-    var str = toStr(requireObjectCoercible(string));
+    const str = toStr(requireObjectCoercible(string));
+
     if (isRegExp(searchString)) {
       throw new TypeError('"includes" does not accept a RegExp');
     }
 
-    var args = [toStr(searchString)];
+    const args = [toStr(searchString)];
+
     if (arguments.length > 2) {
       args[1] = arguments[2];
     }
@@ -77,7 +80,7 @@ if (isWorking) {
  * @throws {TypeError} If searchString is a RegExp.
  * @param {number} [position] -The position within the string at which to begin
  *  searching for searchString.(defaults to 0).
- * @return {boolean} `true` if the given string is found anywhere within the
+ * @returns {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
  * @example
  * var strIncludes = require('string-includes-x');
