@@ -50,8 +50,8 @@
   },
   "dependencies": {
     "attempt-x": "^2.0.5",
-    "is-regexp-x": "^3.0.2",
-    "require-object-coercible-x": "^2.0.7",
+    "is-regexp-x": "^3.0.3",
+    "require-object-coercible-x": "^2.0.8",
     "to-string-x": "^2.0.17"
   },
   "devDependencies": {

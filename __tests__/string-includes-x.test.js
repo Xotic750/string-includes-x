@@ -25,30 +25,34 @@ if (typeof module === 'object' && module.exports) {
 
 describe('includes', function() {
   it('is a function', function() {
+    expect.assertions(1);
     expect(typeof includes).toBe('function');
   });
 
   it('should throw when target is null or undefined', function() {
+    expect.assertions(1);
     expect(function() {
       includes();
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(function() {
       includes(void 0);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(function() {
       includes(null);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('throws a TypeError when given a regex', function() {
+    expect.assertions(1);
     expect(function() {
       includes('foo', /a/g);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('should be truthy on correct results', function() {
+    expect.assertions(1);
     expect(includes('test', 'es')).toBe(true);
     expect(includes('abc', 'a')).toBe(true);
     expect(includes('abc', 'b')).toBe(true);
@@ -72,11 +76,13 @@ describe('includes', function() {
   });
 
   it('should handle large positions', function() {
+    expect.assertions(1);
     expect(includes('abc', 'a', 42)).toBe(false);
     expect(includes('abc', 'a', Infinity)).toBe(false);
   });
 
   it('should handle negative positions', function() {
+    expect.assertions(1);
     expect(includes('abc', 'ab', -43)).toBe(true);
     expect(includes('abc', 'cd', -42)).toBe(false);
     expect(includes('abc', 'ab', -Infinity)).toBe(true);
@@ -84,6 +90,7 @@ describe('includes', function() {
   });
 
   it('should be falsy on incorrect results', function() {
+    expect.assertions(1);
     expect(includes('test', '1290')).toBe(false);
   });
 });

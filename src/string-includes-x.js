@@ -93,4 +93,4 @@ if (isWorking) {
  * includes(str, 'To be', 1); // false
  * includes(str, ('TO BE'); // false
  */
-module.exports = $includes;
+export default $includes;
