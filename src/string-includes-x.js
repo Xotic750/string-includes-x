@@ -1,12 +1,3 @@
-/**
- * @file Determines whether one string may be found within another string.
- * @version 1.1.0
- * @author Xotic750 <Xotic750@gmail.com>
- * @copyright  Xotic750
- * @license {@link <https://opensource.org/licenses/MIT> MIT}
- * @module string-includes-x
- */
-
 const nativeIncludes = typeof String.prototype.includes === 'function' && String.prototype.includes;
 
 let isWorking;
@@ -82,15 +73,5 @@ if (isWorking) {
  *  searching for searchString.(defaults to 0).
  * @returns {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
- * @example
- * var strIncludes = require('string-includes-x');
- *
- * var str = 'To be, or not to be, that is the question.';
- *
- * includes(str, 'To be'); // true
- * includes(str, 'question'); // true
- * includes(str, 'nonexistent'); // false
- * includes(str, 'To be', 1); // false
- * includes(str, ('TO BE'); // false
  */
 export default $includes;
