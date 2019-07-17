@@ -1,4 +1,4 @@
-let includes;
+import includes from '../src/string-includes-x';
 
 describe('includes', function() {
   it('is a function', function() {
@@ -7,7 +7,7 @@ describe('includes', function() {
   });
 
   it('should throw when target is null or undefined', function() {
-    expect.assertions(1);
+    expect.assertions(3);
     expect(function() {
       includes();
     }).toThrowErrorMatchingSnapshot();
@@ -29,7 +29,7 @@ describe('includes', function() {
   });
 
   it('should be truthy on correct results', function() {
-    expect.assertions(1);
+    expect.assertions(20);
     expect(includes('test', 'es')).toBe(true);
     expect(includes('abc', 'a')).toBe(true);
     expect(includes('abc', 'b')).toBe(true);
@@ -53,13 +53,13 @@ describe('includes', function() {
   });
 
   it('should handle large positions', function() {
-    expect.assertions(1);
+    expect.assertions(2);
     expect(includes('abc', 'a', 42)).toBe(false);
     expect(includes('abc', 'a', Infinity)).toBe(false);
   });
 
   it('should handle negative positions', function() {
-    expect.assertions(1);
+    expect.assertions(4);
     expect(includes('abc', 'ab', -43)).toBe(true);
     expect(includes('abc', 'cd', -42)).toBe(false);
     expect(includes('abc', 'ab', -Infinity)).toBe(true);

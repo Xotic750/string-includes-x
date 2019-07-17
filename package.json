@@ -1,6 +1,6 @@
 {
   "name": "string-includes-x",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Determines whether one string may be found within another string.",
   "homepage": "https://github.com/Xotic750/string-includes-x",
   "author": {

@@ -2,14 +2,12 @@ import attempt from 'attempt-x';
 import isRegExp from 'is-regexp-x';
 import toStr from 'to-string-x';
 import requireObjectCoercible from 'require-object-coercible-x';
-
-const ni = ''.includes;
-const nativeIncludes = typeof ni === 'function' && ni;
-
-let isWorking;
+var ni = ''.includes;
+var nativeIncludes = typeof ni === 'function' && ni;
+var isWorking;
 
 if (nativeIncludes) {
-  let res = attempt.call('/a/', nativeIncludes, /a/);
+  var res = attempt.call('/a/', nativeIncludes, /a/);
   isWorking = res.threw;
 
   if (isWorking) {
@@ -27,7 +25,6 @@ if (nativeIncludes) {
     isWorking = res.threw;
   }
 }
-
 /**
  * This method determines whether one string may be found within another string,
  * returning true or false as appropriate.
@@ -42,11 +39,13 @@ if (nativeIncludes) {
  * @returns {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
  */
-let $includes;
+
+
+var $includes;
 
 if (isWorking) {
   $includes = function includes(string, searchString) {
-    const args = [searchString];
+    var args = [searchString];
 
     if (arguments.length > 2) {
       /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
@@ -56,27 +55,28 @@ if (isWorking) {
     return nativeIncludes.apply(string, args);
   };
 } else {
-  const {indexOf} = String.prototype;
+  var indexOf = String.prototype.indexOf;
 
   $includes = function includes(string, searchString) {
-    const str = toStr(requireObjectCoercible(string));
+    var str = toStr(requireObjectCoercible(string));
 
     if (isRegExp(searchString)) {
       throw new TypeError('"includes" does not accept a RegExp');
     }
 
-    const args = [toStr(searchString)];
+    var args = [toStr(searchString)];
 
     if (arguments.length > 2) {
       /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
       args[1] = arguments[2];
-    }
+    } // Somehow this trick makes method 100% compat with the spec.
 
-    // Somehow this trick makes method 100% compat with the spec.
+
     return indexOf.apply(str, args) !== -1;
   };
 }
 
-const inc = $includes;
-
+var inc = $includes;
 export default inc;
+
+//# sourceMappingURL=string-includes-x.esm.js.map

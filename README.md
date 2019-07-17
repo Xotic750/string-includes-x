@@ -21,38 +21,36 @@
 <a name="module_string-includes-x"></a>
 
 ## string-includes-x
+
 Determines whether one string may be found within another string.
 
-**Version**: 1.1.0  
-**Author**: Xotic750 <Xotic750@gmail.com>  
-**License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
-**Copyright**: Xotic750  
 <a name="exp_module_string-includes-x--module.exports"></a>
 
 ### `module.exports` ⇒ <code>boolean</code> ⏏
+
 This method determines whether one string may be found within another string,
 returning true or false as appropriate.
 
 **Kind**: Exported member  
 **Returns**: <code>boolean</code> - `true` if the given string is found anywhere within the
- search string; otherwise, `false` if not.  
+search string; otherwise, `false` if not.  
 **Throws**:
 
 - <code>TypeError</code> If target is null or undefined.
 - <code>TypeError</code> If searchString is a RegExp.
 
+| Param        | Type                | Description                                                                                  |
+| ------------ | ------------------- | -------------------------------------------------------------------------------------------- |
+| string       | <code>string</code> | The target string.                                                                           |
+| searchString | <code>string</code> | A string to be searched for within the target string.                                        |
+| [position]   | <code>number</code> | The position within the string at which to begin searching for searchString.(defaults to 0). |
 
-| Param | Type | Description |
-| --- | --- | --- |
-| string | <code>string</code> | The target string. |
-| searchString | <code>string</code> | A string to be searched for within the  target string. |
-| [position] | <code>number</code> | The position within the string at which to begin  searching for searchString.(defaults to 0). |
+**Example**
 
-**Example**  
 ```js
-var strIncludes = require('string-includes-x');
+import strIncludes from 'string-includes-x';
 
-var str = 'To be, or not to be, that is the question.';
+const str = 'To be, or not to be, that is the question.';
 
 includes(str, 'To be'); // true
 includes(str, 'question'); // true

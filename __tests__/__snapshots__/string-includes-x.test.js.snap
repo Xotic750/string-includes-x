@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`includes should throw when target is null or undefined 1`] = `"String.prototype.includes called on null or undefined"`;
+
+exports[`includes should throw when target is null or undefined 2`] = `"String.prototype.includes called on null or undefined"`;
+
+exports[`includes should throw when target is null or undefined 3`] = `"String.prototype.includes called on null or undefined"`;
+
+exports[`includes throws a TypeError when given a regex 1`] = `"First argument to String.prototype.includes must not be a regular expression"`;
