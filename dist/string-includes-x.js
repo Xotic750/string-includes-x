@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-17T22:05:12.550Z",
+  "date": "2019-07-18T00:36:35.471Z",
   "describe": "",
   "description": "Determines whether one string may be found within another string.",
   "file": "string-includes-x.js",
   "hash": "9fa1b53b32152e796606",
   "license": "MIT",
-  "version": "2.0.0"
+  "version": "2.0.1"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
