@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-27T22:09:36.372Z",
+  "date": "2019-07-28T13:39:45.370Z",
   "describe": "",
   "description": "Determines whether one string may be found within another string.",
   "file": "string-includes-x.js",
-  "hash": "113c6a037b6b61e7e0d5",
+  "hash": "888c093fb560c163042d",
   "license": "MIT",
   "version": "2.0.10"
 }
@@ -1724,8 +1724,8 @@ if (nativeGOPD) {
   var getOPDWorksOnDom = doc ? object_get_own_property_descriptor_x_esm_doesGOPDWork(doc.createElement('div'), 'sentinel') : true;
 
   if (getOPDWorksOnDom) {
-    var res = attempt_x_esm(nativeGOPD, object_get_own_property_descriptor_x_esm_castObject('abc'), 1);
-    var worksWithStr = res.threw === false && res.value && res.value.value === 'b';
+    var object_get_own_property_descriptor_x_esm_res = attempt_x_esm(nativeGOPD, object_get_own_property_descriptor_x_esm_castObject('abc'), 1);
+    var worksWithStr = object_get_own_property_descriptor_x_esm_res.threw === false && object_get_own_property_descriptor_x_esm_res.value && object_get_own_property_descriptor_x_esm_res.value.value === 'b';
 
     if (worksWithStr) {
       var getOPDWorksOnObject = object_get_own_property_descriptor_x_esm_doesGOPDWork({}, 'sentinel');
@@ -2143,49 +2143,35 @@ var is_regexp_x_esm_isRegex = function isRegex(value) {
 
 
 
-var ni = ''.includes;
+
+var string_includes_x_esm_EMPTY_STRING = '';
+var ni = string_includes_x_esm_EMPTY_STRING.includes;
 var nativeIncludes = typeof ni === 'function' && ni;
-var isWorking;
 
-if (nativeIncludes) {
-  var string_includes_x_esm_res = attempt_x_esm.call('/a/', nativeIncludes, /a/);
-  isWorking = string_includes_x_esm_res.threw;
+var string_includes_x_esm_test1 = function test1() {
+  return attempt_x_esm.call('/a/', nativeIncludes, /a/).threw;
+};
 
-  if (isWorking) {
-    string_includes_x_esm_res = attempt_x_esm.call('abc', nativeIncludes, 'a', Infinity);
-    isWorking = string_includes_x_esm_res.threw === false && string_includes_x_esm_res.value === false;
-  }
+var string_includes_x_esm_test2 = function test2() {
+  var res = attempt_x_esm.call('abc', nativeIncludes, 'a', Infinity);
+  return res.threw === false && res.value === false;
+};
 
-  if (isWorking) {
-    string_includes_x_esm_res = attempt_x_esm.call(123, nativeIncludes, '2');
-    isWorking = string_includes_x_esm_res.threw === false && string_includes_x_esm_res.value === true;
-  }
+var string_includes_x_esm_test3 = function test3() {
+  var res = attempt_x_esm.call(123, nativeIncludes, '2');
+  return res.threw === false && res.value === true;
+};
 
-  if (isWorking) {
-    string_includes_x_esm_res = attempt_x_esm.call(null, nativeIncludes, 'u');
-    isWorking = string_includes_x_esm_res.threw;
-  }
-}
-/**
- * This method determines whether one string may be found within another string,
- * returning true or false as appropriate.
- *
- * @param {string} string - The target string.
- * @throws {TypeError} If target is null or undefined.
- * @param {string} searchString - A string to be searched for within the
- *  target string.
- * @throws {TypeError} If searchString is a RegExp.
- * @param {number} [position] -The position within the string at which to begin
- *  searching for searchString.(defaults to 0).
- * @returns {boolean} `true` if the given string is found anywhere within the
- *  search string; otherwise, `false` if not.
- */
+var string_includes_x_esm_test4 = function test4() {
+  var res = attempt_x_esm.call(null, nativeIncludes, 'u');
+  return res.threw;
+};
 
+var isWorking = to_boolean_x_esm(nativeIncludes) && string_includes_x_esm_test1() && string_includes_x_esm_test2() && string_includes_x_esm_test3() && string_includes_x_esm_test4();
+console.log(isWorking);
 
-var $includes;
-
-if (isWorking) {
-  $includes = function includes(string, searchString) {
+var patchedIncludes = function patchedIncludes() {
+  return function includes(string, searchString) {
     var args = [searchString];
 
     if (arguments.length > 2) {
@@ -2195,10 +2181,11 @@ if (isWorking) {
 
     return nativeIncludes.apply(string, args);
   };
-} else {
-  var indexOf = String.prototype.indexOf;
+};
 
-  $includes = function includes(string, searchString) {
+var string_includes_x_esm_implementation = function implementation() {
+  var indexOf = string_includes_x_esm_EMPTY_STRING.indexOf;
+  return function includes(string, searchString) {
     var str = to_string_x_esm(require_object_coercible_x_esm(string));
 
     if (is_regexp_x_esm(searchString)) {
@@ -2215,10 +2202,25 @@ if (isWorking) {
 
     return indexOf.apply(str, args) !== -1;
   };
-}
+};
+/**
+ * This method determines whether one string may be found within another string,
+ * returning true or false as appropriate.
+ *
+ * @param {string} string - The target string.
+ * @throws {TypeError} If target is null or undefined.
+ * @param {string} searchString - A string to be searched for within the
+ *  target string.
+ * @throws {TypeError} If searchString is a RegExp.
+ * @param {number} [position] -The position within the string at which to begin
+ *  searching for searchString.(defaults to 0).
+ * @returns {boolean} `true` if the given string is found anywhere within the
+ *  search string; otherwise, `false` if not.
+ */
 
-var inc = $includes;
-/* harmony default export */ var string_includes_x_esm = __webpack_exports__["default"] = (inc);
+
+var $includes = isWorking ? patchedIncludes() : string_includes_x_esm_implementation();
+/* harmony default export */ var string_includes_x_esm = __webpack_exports__["default"] = ($includes);
 
 
 

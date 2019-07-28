@@ -2,49 +2,35 @@ import attempt from 'attempt-x';
 import isRegExp from 'is-regexp-x';
 import toStr from 'to-string-x';
 import requireObjectCoercible from 'require-object-coercible-x';
-var ni = ''.includes;
+import toBoolean from 'to-boolean-x';
+var EMPTY_STRING = '';
+var ni = EMPTY_STRING.includes;
 var nativeIncludes = typeof ni === 'function' && ni;
-var isWorking;
 
-if (nativeIncludes) {
-  var res = attempt.call('/a/', nativeIncludes, /a/);
-  isWorking = res.threw;
+var test1 = function test1() {
+  return attempt.call('/a/', nativeIncludes, /a/).threw;
+};
 
-  if (isWorking) {
-    res = attempt.call('abc', nativeIncludes, 'a', Infinity);
-    isWorking = res.threw === false && res.value === false;
-  }
+var test2 = function test2() {
+  var res = attempt.call('abc', nativeIncludes, 'a', Infinity);
+  return res.threw === false && res.value === false;
+};
 
-  if (isWorking) {
-    res = attempt.call(123, nativeIncludes, '2');
-    isWorking = res.threw === false && res.value === true;
-  }
+var test3 = function test3() {
+  var res = attempt.call(123, nativeIncludes, '2');
+  return res.threw === false && res.value === true;
+};
 
-  if (isWorking) {
-    res = attempt.call(null, nativeIncludes, 'u');
-    isWorking = res.threw;
-  }
-}
-/**
- * This method determines whether one string may be found within another string,
- * returning true or false as appropriate.
- *
- * @param {string} string - The target string.
- * @throws {TypeError} If target is null or undefined.
- * @param {string} searchString - A string to be searched for within the
- *  target string.
- * @throws {TypeError} If searchString is a RegExp.
- * @param {number} [position] -The position within the string at which to begin
- *  searching for searchString.(defaults to 0).
- * @returns {boolean} `true` if the given string is found anywhere within the
- *  search string; otherwise, `false` if not.
- */
+var test4 = function test4() {
+  var res = attempt.call(null, nativeIncludes, 'u');
+  return res.threw;
+};
 
+var isWorking = toBoolean(nativeIncludes) && test1() && test2() && test3() && test4();
+console.log(isWorking);
 
-var $includes;
-
-if (isWorking) {
-  $includes = function includes(string, searchString) {
+var patchedIncludes = function patchedIncludes() {
+  return function includes(string, searchString) {
     var args = [searchString];
 
     if (arguments.length > 2) {
@@ -54,10 +40,11 @@ if (isWorking) {
 
     return nativeIncludes.apply(string, args);
   };
-} else {
-  var indexOf = String.prototype.indexOf;
+};
 
-  $includes = function includes(string, searchString) {
+var implementation = function implementation() {
+  var indexOf = EMPTY_STRING.indexOf;
+  return function includes(string, searchString) {
     var str = toStr(requireObjectCoercible(string));
 
     if (isRegExp(searchString)) {
@@ -74,9 +61,24 @@ if (isWorking) {
 
     return indexOf.apply(str, args) !== -1;
   };
-}
+};
+/**
+ * This method determines whether one string may be found within another string,
+ * returning true or false as appropriate.
+ *
+ * @param {string} string - The target string.
+ * @throws {TypeError} If target is null or undefined.
+ * @param {string} searchString - A string to be searched for within the
+ *  target string.
+ * @throws {TypeError} If searchString is a RegExp.
+ * @param {number} [position] -The position within the string at which to begin
+ *  searching for searchString.(defaults to 0).
+ * @returns {boolean} `true` if the given string is found anywhere within the
+ *  search string; otherwise, `false` if not.
+ */
 
-var inc = $includes;
-export default inc;
+
+var $includes = isWorking ? patchedIncludes() : implementation();
+export default $includes;
 
 //# sourceMappingURL=string-includes-x.esm.js.map
