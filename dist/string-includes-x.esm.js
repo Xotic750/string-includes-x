@@ -27,11 +27,19 @@ var test4 = function test4() {
 };
 
 var isWorking = toBoolean(nativeIncludes) && test1() && test2() && test3() && test4();
-console.log(isWorking);
+
+var assertRegex = function assertRegex(searchString) {
+  if (isRegExp(searchString)) {
+    throw new TypeError('"includes" does not accept a RegExp');
+  }
+
+  return searchString;
+};
 
 var patchedIncludes = function patchedIncludes() {
   return function includes(string, searchString) {
-    var args = [searchString];
+    requireObjectCoercible(string);
+    var args = [assertRegex(searchString)];
 
     if (arguments.length > 2) {
       /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
@@ -42,15 +50,11 @@ var patchedIncludes = function patchedIncludes() {
   };
 };
 
-var implementation = function implementation() {
+export var implementation = function implementation() {
   var indexOf = EMPTY_STRING.indexOf;
   return function includes(string, searchString) {
     var str = toStr(requireObjectCoercible(string));
-
-    if (isRegExp(searchString)) {
-      throw new TypeError('"includes" does not accept a RegExp');
-    }
-
+    assertRegex(searchString);
     var args = [toStr(searchString)];
 
     if (arguments.length > 2) {
@@ -76,7 +80,6 @@ var implementation = function implementation() {
  * @returns {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
  */
-
 
 var $includes = isWorking ? patchedIncludes() : implementation();
 export default $includes;

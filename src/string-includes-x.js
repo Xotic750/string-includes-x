@@ -31,10 +31,20 @@ const test4 = function test4() {
 };
 
 const isWorking = toBoolean(nativeIncludes) && test1() && test2() && test3() && test4();
-console.log(isWorking);
+
+const assertRegex = function assertRegex(searchString) {
+  if (isRegExp(searchString)) {
+    throw new TypeError('"includes" does not accept a RegExp');
+  }
+
+  return searchString;
+};
+
 const patchedIncludes = function patchedIncludes() {
   return function includes(string, searchString) {
-    const args = [searchString];
+    requireObjectCoercible(string);
+
+    const args = [assertRegex(searchString)];
 
     if (arguments.length > 2) {
       /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
@@ -50,11 +60,7 @@ export const implementation = function implementation() {
 
   return function includes(string, searchString) {
     const str = toStr(requireObjectCoercible(string));
-
-    if (isRegExp(searchString)) {
-      throw new TypeError('"includes" does not accept a RegExp');
-    }
-
+    assertRegex(searchString);
     const args = [toStr(searchString)];
 
     if (arguments.length > 2) {

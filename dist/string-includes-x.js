@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-07-28T13:39:45.370Z",
+  "date": "2019-07-29T20:10:37.592Z",
   "describe": "",
   "description": "Determines whether one string may be found within another string.",
   "file": "string-includes-x.js",
-  "hash": "888c093fb560c163042d",
+  "hash": "29abb0d3cfac9599ab91",
   "license": "MIT",
   "version": "2.0.10"
 }
@@ -2139,6 +2139,7 @@ var is_regexp_x_esm_isRegex = function isRegex(value) {
 
 
 // CONCATENATED MODULE: ./dist/string-includes-x.esm.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "implementation", function() { return string_includes_x_esm_implementation; });
 
 
 
@@ -2168,11 +2169,19 @@ var string_includes_x_esm_test4 = function test4() {
 };
 
 var isWorking = to_boolean_x_esm(nativeIncludes) && string_includes_x_esm_test1() && string_includes_x_esm_test2() && string_includes_x_esm_test3() && string_includes_x_esm_test4();
-console.log(isWorking);
 
-var patchedIncludes = function patchedIncludes() {
+var string_includes_x_esm_assertRegex = function assertRegex(searchString) {
+  if (is_regexp_x_esm(searchString)) {
+    throw new TypeError('"includes" does not accept a RegExp');
+  }
+
+  return searchString;
+};
+
+var string_includes_x_esm_patchedIncludes = function patchedIncludes() {
   return function includes(string, searchString) {
-    var args = [searchString];
+    require_object_coercible_x_esm(string);
+    var args = [string_includes_x_esm_assertRegex(searchString)];
 
     if (arguments.length > 2) {
       /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
@@ -2187,11 +2196,7 @@ var string_includes_x_esm_implementation = function implementation() {
   var indexOf = string_includes_x_esm_EMPTY_STRING.indexOf;
   return function includes(string, searchString) {
     var str = to_string_x_esm(require_object_coercible_x_esm(string));
-
-    if (is_regexp_x_esm(searchString)) {
-      throw new TypeError('"includes" does not accept a RegExp');
-    }
-
+    string_includes_x_esm_assertRegex(searchString);
     var args = [to_string_x_esm(searchString)];
 
     if (arguments.length > 2) {
@@ -2218,8 +2223,7 @@ var string_includes_x_esm_implementation = function implementation() {
  *  search string; otherwise, `false` if not.
  */
 
-
-var $includes = isWorking ? patchedIncludes() : string_includes_x_esm_implementation();
+var $includes = isWorking ? string_includes_x_esm_patchedIncludes() : string_includes_x_esm_implementation();
 /* harmony default export */ var string_includes_x_esm = __webpack_exports__["default"] = ($includes);
 
 
