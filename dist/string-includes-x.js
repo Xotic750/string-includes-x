@@ -2,7 +2,7 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-08-05T15:59:48.879Z",
+  "date": "2019-08-05T17:34:15.492Z",
   "describe": "",
   "description": "Determines whether one string may be found within another string.",
   "file": "string-includes-x.js",
