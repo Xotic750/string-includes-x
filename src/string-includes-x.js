@@ -5,7 +5,7 @@ import requireObjectCoercible from 'require-object-coercible-x';
 import toBoolean from 'to-boolean-x';
 
 const EMPTY_STRING = '';
-const ni = EMPTY_STRING.includes;
+const {includes: ni, indexOf} = EMPTY_STRING;
 const nativeIncludes = typeof ni === 'function' && ni;
 
 const test1 = function test1() {
@@ -40,37 +40,31 @@ const assertRegex = function assertRegex(searchString) {
   return searchString;
 };
 
-const patchedIncludes = function patchedIncludes() {
-  return function includes(string, searchString) {
-    requireObjectCoercible(string);
+const patchedIncludes = function includes(string, searchString) {
+  requireObjectCoercible(string);
 
-    const args = [assertRegex(searchString)];
+  const args = [assertRegex(searchString)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    }
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  }
 
-    return nativeIncludes.apply(string, args);
-  };
+  return nativeIncludes.apply(string, args);
 };
 
-export const implementation = function implementation() {
-  const {indexOf} = EMPTY_STRING;
+export const implementation = function includes(string, searchString) {
+  const str = toStr(requireObjectCoercible(string));
+  assertRegex(searchString);
+  const args = [toStr(searchString)];
 
-  return function includes(string, searchString) {
-    const str = toStr(requireObjectCoercible(string));
-    assertRegex(searchString);
-    const args = [toStr(searchString)];
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  }
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    }
-
-    // Somehow this trick makes method 100% compat with the spec.
-    return indexOf.apply(str, args) !== -1;
-  };
+  // Somehow this trick makes method 100% compat with the spec.
+  return indexOf.apply(str, args) !== -1;
 };
 
 /**
@@ -87,6 +81,6 @@ export const implementation = function implementation() {
  * @returns {boolean} `true` if the given string is found anywhere within the
  *  search string; otherwise, `false` if not.
  */
-const $includes = isWorking ? patchedIncludes() : implementation();
+const $includes = isWorking ? patchedIncludes : implementation;
 
 export default $includes;

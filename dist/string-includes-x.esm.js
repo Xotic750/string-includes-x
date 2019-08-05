@@ -4,7 +4,8 @@ import toStr from 'to-string-x';
 import requireObjectCoercible from 'require-object-coercible-x';
 import toBoolean from 'to-boolean-x';
 var EMPTY_STRING = '';
-var ni = EMPTY_STRING.includes;
+var ni = EMPTY_STRING.includes,
+    indexOf = EMPTY_STRING.indexOf;
 var nativeIncludes = typeof ni === 'function' && ni;
 
 var test1 = function test1() {
@@ -36,35 +37,30 @@ var assertRegex = function assertRegex(searchString) {
   return searchString;
 };
 
-var patchedIncludes = function patchedIncludes() {
-  return function includes(string, searchString) {
-    requireObjectCoercible(string);
-    var args = [assertRegex(searchString)];
+var patchedIncludes = function includes(string, searchString) {
+  requireObjectCoercible(string);
+  var args = [assertRegex(searchString)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    }
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  }
 
-    return nativeIncludes.apply(string, args);
-  };
+  return nativeIncludes.apply(string, args);
 };
 
-export var implementation = function implementation() {
-  var indexOf = EMPTY_STRING.indexOf;
-  return function includes(string, searchString) {
-    var str = toStr(requireObjectCoercible(string));
-    assertRegex(searchString);
-    var args = [toStr(searchString)];
+export var implementation = function includes(string, searchString) {
+  var str = toStr(requireObjectCoercible(string));
+  assertRegex(searchString);
+  var args = [toStr(searchString)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    } // Somehow this trick makes method 100% compat with the spec.
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  } // Somehow this trick makes method 100% compat with the spec.
 
 
-    return indexOf.apply(str, args) !== -1;
-  };
+  return indexOf.apply(str, args) !== -1;
 };
 /**
  * This method determines whether one string may be found within another string,
@@ -81,7 +77,7 @@ export var implementation = function implementation() {
  *  search string; otherwise, `false` if not.
  */
 
-var $includes = isWorking ? patchedIncludes() : implementation();
+var $includes = isWorking ? patchedIncludes : implementation;
 export default $includes;
 
 //# sourceMappingURL=string-includes-x.esm.js.map

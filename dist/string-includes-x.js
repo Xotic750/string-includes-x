@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-08-04T23:30:05.700Z",
+  "date": "2019-08-05T12:04:21.894Z",
   "describe": "",
   "description": "Determines whether one string may be found within another string.",
   "file": "string-includes-x.js",
-  "hash": "bb6c98c0c505c1cdfa58",
+  "hash": "b5536ea3c6e28d0a0c5a",
   "license": "MIT",
   "version": "2.0.11"
 }
@@ -2180,14 +2180,15 @@ var is_regexp_x_esm_isRegex = function isRegex(value) {
 
 
 // CONCATENATED MODULE: ./dist/string-includes-x.esm.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "implementation", function() { return string_includes_x_esm_implementation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "implementation", function() { return implementation; });
 
 
 
 
 
 var string_includes_x_esm_EMPTY_STRING = '';
-var ni = string_includes_x_esm_EMPTY_STRING.includes;
+var ni = string_includes_x_esm_EMPTY_STRING.includes,
+    indexOf = string_includes_x_esm_EMPTY_STRING.indexOf;
 var nativeIncludes = typeof ni === 'function' && ni;
 
 var string_includes_x_esm_test1 = function test1() {
@@ -2219,35 +2220,30 @@ var string_includes_x_esm_assertRegex = function assertRegex(searchString) {
   return searchString;
 };
 
-var string_includes_x_esm_patchedIncludes = function patchedIncludes() {
-  return function includes(string, searchString) {
-    require_object_coercible_x_esm(string);
-    var args = [string_includes_x_esm_assertRegex(searchString)];
+var patchedIncludes = function includes(string, searchString) {
+  require_object_coercible_x_esm(string);
+  var args = [string_includes_x_esm_assertRegex(searchString)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    }
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  }
 
-    return nativeIncludes.apply(string, args);
-  };
+  return nativeIncludes.apply(string, args);
 };
 
-var string_includes_x_esm_implementation = function implementation() {
-  var indexOf = string_includes_x_esm_EMPTY_STRING.indexOf;
-  return function includes(string, searchString) {
-    var str = to_string_x_esm(require_object_coercible_x_esm(string));
-    string_includes_x_esm_assertRegex(searchString);
-    var args = [to_string_x_esm(searchString)];
+var implementation = function includes(string, searchString) {
+  var str = to_string_x_esm(require_object_coercible_x_esm(string));
+  string_includes_x_esm_assertRegex(searchString);
+  var args = [to_string_x_esm(searchString)];
 
-    if (arguments.length > 2) {
-      /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-      args[1] = arguments[2];
-    } // Somehow this trick makes method 100% compat with the spec.
+  if (arguments.length > 2) {
+    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
+    args[1] = arguments[2];
+  } // Somehow this trick makes method 100% compat with the spec.
 
 
-    return indexOf.apply(str, args) !== -1;
-  };
+  return indexOf.apply(str, args) !== -1;
 };
 /**
  * This method determines whether one string may be found within another string,
@@ -2264,7 +2260,7 @@ var string_includes_x_esm_implementation = function implementation() {
  *  search string; otherwise, `false` if not.
  */
 
-var $includes = isWorking ? string_includes_x_esm_patchedIncludes() : string_includes_x_esm_implementation();
+var $includes = isWorking ? patchedIncludes : implementation;
 /* harmony default export */ var string_includes_x_esm = __webpack_exports__["default"] = ($includes);
 
 
