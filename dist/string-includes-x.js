@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017",
-  "date": "2019-08-13T15:44:57.427Z",
+  "date": "2019-08-14T16:00:09.482Z",
   "describe": "",
   "description": "Determines whether one string may be found within another string.",
   "file": "string-includes-x.js",
-  "hash": "b3c0fc93d98269fab9fa",
+  "hash": "df38c0a89a89e8e09d90",
   "license": "MIT",
-  "version": "2.0.12"
+  "version": "2.1.0"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1372,7 +1372,8 @@ var toStringSymbolsSupported = function toStringSymbolsSupported(value) {
  *
  * @type number
  */
-/* harmony default export */ var nan_x_esm = (0 / 0);
+var constantNAN = 0 / 0;
+/* harmony default export */ var nan_x_esm = (constantNAN);
 
 
 // CONCATENATED MODULE: ./node_modules/parse-int-x/dist/parse-int-x.esm.js
@@ -1551,7 +1552,8 @@ var is_nan_x_esm_isNaN = function isNaN(value) {
  *
  * @type number
  */
-/* harmony default export */ var infinity_x_esm = (1 / 0);
+var constantInfinity = 1 / 0;
+/* harmony default export */ var infinity_x_esm = (constantInfinity);
 
 
 // CONCATENATED MODULE: ./node_modules/is-finite-x/dist/is-finite-x.esm.js
@@ -1965,13 +1967,15 @@ var gOPS = $getOwnPropertyDescriptor;
  * not. Otherwise returns the `value`.
  *
  * @param {*} value - The argument to be tested.
+ * @param {string} [message] - An alternative user message.
  * @throws {TypeError} Throws if `value` is not an object.
  * @returns {*} Returns `value` if it is an object.
  */
 
-var assert_is_object_x_esm_assertIsObject = function assertIsObject(value) {
+var assert_is_object_x_esm_assertIsObject = function assertIsObject(value, message) {
   if (is_primitive_default()(value)) {
-    throw new TypeError("".concat(to_string_symbols_supported_x_esm(value), " is not an object"));
+    var msg = arguments.length > 1 ? to_string_symbols_supported_x_esm(message) : "".concat(to_string_symbols_supported_x_esm(value), " is not an object");
+    throw new TypeError(msg);
   }
 
   return value;
