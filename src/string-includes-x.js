@@ -3,34 +3,35 @@ import isRegExp from 'is-regexp-x';
 import toStr from 'to-string-x';
 import requireObjectCoercible from 'require-object-coercible-x';
 import toBoolean from 'to-boolean-x';
+import methodize from 'simple-methodize-x';
 
 const EMPTY_STRING = '';
-const {includes: ni, indexOf} = EMPTY_STRING;
+const indexOf = methodize(EMPTY_STRING.indexOf);
+const {includes: ni} = EMPTY_STRING;
 const nativeIncludes = typeof ni === 'function' && ni;
+const methodizedIncludes = nativeIncludes && methodize(nativeIncludes);
 
 const test1 = function test1() {
-  return attempt.call('/a/', nativeIncludes, /a/).threw;
+  return attempt(methodizedIncludes, '/a/', /a/).threw;
 };
 
 const test2 = function test2() {
-  const res = attempt.call('abc', nativeIncludes, 'a', Infinity);
+  const res = attempt(methodizedIncludes, 'abc', 'a', Infinity);
 
   return res.threw === false && res.value === false;
 };
 
 const test3 = function test3() {
-  const res = attempt.call(123, nativeIncludes, '2');
+  const res = attempt(methodizedIncludes, 123, '2');
 
   return res.threw === false && res.value === true;
 };
 
 const test4 = function test4() {
-  const res = attempt.call(null, nativeIncludes, 'u');
-
-  return res.threw;
+  return attempt(methodizedIncludes, null, 'u').threw;
 };
 
-const isWorking = toBoolean(nativeIncludes) && test1() && test2() && test3() && test4();
+const isWorking = toBoolean(methodizedIncludes) && test1() && test2() && test3() && test4();
 
 const assertRegex = function assertRegex(searchString) {
   if (isRegExp(searchString)) {
@@ -41,30 +42,14 @@ const assertRegex = function assertRegex(searchString) {
 };
 
 const patchedIncludes = function includes(string, searchString) {
-  requireObjectCoercible(string);
-
-  const args = [assertRegex(searchString)];
-
-  if (arguments.length > 2) {
-    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-    args[1] = arguments[2];
-  }
-
-  return nativeIncludes.apply(string, args);
+  /* eslint-disable-next-line prefer-rest-params */
+  return methodizedIncludes(requireObjectCoercible(string), assertRegex(searchString), arguments[2]);
 };
 
 export const implementation = function includes(string, searchString) {
-  const str = toStr(requireObjectCoercible(string));
-  assertRegex(searchString);
-  const args = [toStr(searchString)];
-
-  if (arguments.length > 2) {
-    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-    args[1] = arguments[2];
-  }
-
   // Somehow this trick makes method 100% compat with the spec.
-  return indexOf.apply(str, args) !== -1;
+  /* eslint-disable-next-line prefer-rest-params */
+  return indexOf(toStr(requireObjectCoercible(string)), toStr(assertRegex(searchString)), arguments[2]) !== -1;
 };
 
 /**

@@ -3,31 +3,32 @@ import isRegExp from 'is-regexp-x';
 import toStr from 'to-string-x';
 import requireObjectCoercible from 'require-object-coercible-x';
 import toBoolean from 'to-boolean-x';
+import methodize from 'simple-methodize-x';
 var EMPTY_STRING = '';
-var ni = EMPTY_STRING.includes,
-    indexOf = EMPTY_STRING.indexOf;
+var indexOf = methodize(EMPTY_STRING.indexOf);
+var ni = EMPTY_STRING.includes;
 var nativeIncludes = typeof ni === 'function' && ni;
+var methodizedIncludes = nativeIncludes && methodize(nativeIncludes);
 
 var test1 = function test1() {
-  return attempt.call('/a/', nativeIncludes, /a/).threw;
+  return attempt(methodizedIncludes, '/a/', /a/).threw;
 };
 
 var test2 = function test2() {
-  var res = attempt.call('abc', nativeIncludes, 'a', Infinity);
+  var res = attempt(methodizedIncludes, 'abc', 'a', Infinity);
   return res.threw === false && res.value === false;
 };
 
 var test3 = function test3() {
-  var res = attempt.call(123, nativeIncludes, '2');
+  var res = attempt(methodizedIncludes, 123, '2');
   return res.threw === false && res.value === true;
 };
 
 var test4 = function test4() {
-  var res = attempt.call(null, nativeIncludes, 'u');
-  return res.threw;
+  return attempt(methodizedIncludes, null, 'u').threw;
 };
 
-var isWorking = toBoolean(nativeIncludes) && test1() && test2() && test3() && test4();
+var isWorking = toBoolean(methodizedIncludes) && test1() && test2() && test3() && test4();
 
 var assertRegex = function assertRegex(searchString) {
   if (isRegExp(searchString)) {
@@ -38,29 +39,15 @@ var assertRegex = function assertRegex(searchString) {
 };
 
 var patchedIncludes = function includes(string, searchString) {
-  requireObjectCoercible(string);
-  var args = [assertRegex(searchString)];
-
-  if (arguments.length > 2) {
-    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-    args[1] = arguments[2];
-  }
-
-  return nativeIncludes.apply(string, args);
+  /* eslint-disable-next-line prefer-rest-params */
+  return methodizedIncludes(requireObjectCoercible(string), assertRegex(searchString), arguments[2]);
 };
 
 export var implementation = function includes(string, searchString) {
-  var str = toStr(requireObjectCoercible(string));
-  assertRegex(searchString);
-  var args = [toStr(searchString)];
+  // Somehow this trick makes method 100% compat with the spec.
 
-  if (arguments.length > 2) {
-    /* eslint-disable-next-line prefer-rest-params,prefer-destructuring */
-    args[1] = arguments[2];
-  } // Somehow this trick makes method 100% compat with the spec.
-
-
-  return indexOf.apply(str, args) !== -1;
+  /* eslint-disable-next-line prefer-rest-params */
+  return indexOf(toStr(requireObjectCoercible(string)), toStr(assertRegex(searchString)), arguments[2]) !== -1;
 };
 /**
  * This method determines whether one string may be found within another string,
